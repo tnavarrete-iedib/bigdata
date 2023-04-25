@@ -34,8 +34,8 @@ RUN apt-get update -y && \
 
 # Definim les variables d'entorn de Spark
 ENV SPARK_HOME /usr/bin/spark-${spark_version}-bin-hadoop${hadoop_version}
-ENV SPARK_MASTER_HOST spark-master #nom del servidor que fa de mestre
-ENV SPARK_MASTER_PORT 7077 #port on s'executa el Apache Master
+ENV SPARK_MASTER_HOST spark-master
+ENV SPARK_MASTER_PORT 7077
 ENV PYSPARK_PYTHON python3
 
 # Exposam el port perquè els nodes worker es puguin connectar al node master
