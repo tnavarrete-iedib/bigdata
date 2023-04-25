@@ -17,7 +17,7 @@ ENV JUPYTERLAB_PORT=${jupyterlab_web}
 ENV HDFS_SIMULAT=${hdfs_simulat}
 
 # Instal·lam la darrera versió estable de Python3
-RUN mkdir -p ${hdfs_simulado} && \
+RUN mkdir -p ${hdfs_simulat} && \
     apt-get update -y && \
     apt-get install -y python3 && \
     ln -s /usr/bin/python3 /usr/bin/python && \
@@ -39,7 +39,7 @@ CMD ["bash"]
 EXPOSE ${jupyterlab_web}
 
 # Especificam la ruta de treball dins del contenidor
-WORKDIR ${HDFS_SIMULADO}
+WORKDIR ${HDFS_SIMULAT}
 
 # Executam JupyterLab en el port especificat
 CMD jupyter lab --ip=0.0.0.0 --port=${JUPYTERLAB_PORT} --no-browser --allow-root --NotebookApp.token=

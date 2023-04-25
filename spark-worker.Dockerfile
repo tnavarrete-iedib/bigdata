@@ -14,7 +14,7 @@ ARG spark_worker_web=8081 # port per a la interfície web del node worker
 ENV HDFS_SIMULAT=${hdfs_simulat}
 
 # Instal·lam la darrera versió estable de Python3
-RUN mkdir -p ${hdfs_simulado} && \
+RUN mkdir -p ${hdfs_simulat} && \
     apt-get update -y && \
     apt-get install -y python3 && \
     ln -s /usr/bin/python3 /usr/bin/python && \
