@@ -1,6 +1,5 @@
 # Especificamos las versiones que se utilizarán de Spark, Hadoop y JupyterLab
 SPARK_VERSION="3.4.0"
-HADOOP_VERSION="3.3.5"
 JUPYTERLAB_VERSION="3.6.3"
 
 # Creación de la imagen de Docker spark-master
