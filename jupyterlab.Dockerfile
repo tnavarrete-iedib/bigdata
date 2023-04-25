@@ -4,14 +4,10 @@ FROM openjdk:8-jre-slim
 
 
 ## Descarregam e instal·lam les dependències
-# Definim les variables delEjecutamos el fichero build.sh para generar las imágenes:
-sudo bash build.sh
-
-Una vez ha acabado, comprobamos que están todas las imágenes montadas:
-sudo docker images
- Dockerfile
+# Definim les variables del Dockerfile
 ARG hdfs_simulat=/opt/workspace #directori compartit on simulam HDFS
 ARG spark_version=3.4.0
+ARG jupyterlab_version=3.6.3
 ARG jupyterlab_web=8888 # port per a la interfície web de JupyterLab
 
 # Definim la variable d'entorn amb el port de JupyterLab
