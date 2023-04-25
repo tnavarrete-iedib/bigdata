@@ -1,23 +1,27 @@
-## Selección de imagen base
-# Especificamos como imagen base una imagen Debian ligera con Java 8 JRE
+## Seleccionam la imatge base
+# Especificam com a imatge base una imatge Debian llleuger amb Java 8 JRE
 FROM openjdk:8-jre-slim
 
 
-## Descarga e instalación de dependencias
-# Definimos las variables del Dockerfile
-ARG hdfs_simulado=/opt/workspace
-ARG spark_version=3.1.2
-ARG jupyterlab_version=3.2.0
-ARG jupyterlab_web=8888 # Puerto para interfaz web de JupyterLab
+## Descarregam e instal·lam les dependències
+# Definim les variables delEjecutamos el fichero build.sh para generar las imágenes:
+sudo bash build.sh
 
-# Definimos la variable de entorno conteniendo el puerto de JupyterLab
-ENV HDFS_SIMULADO=${hdfs_simulado}
+Una vez ha acabado, comprobamos que están todas las imágenes montadas:
+sudo docker images
+ Dockerfile
+ARG hdfs_simulat=/opt/workspace #directori compartit on simulam HDFS
+ARG spark_version=3.4.0
+ARG jupyterlab_web=8888 # port per a la interfície web de JupyterLab
 
-# Definimos las variables de entorno conteniendo el directorio de HDFS
+# Definim la variable d'entorn amb el port de JupyterLab
 ENV JUPYTERLAB_PORT=${jupyterlab_web}
 
-# Realizamos la instalación de la última versión estable de Python3
-RUN mkdir -p ${hdfs_simulado} && \
+# Definim les variables d'entorn amb el directori que simula HDFS
+ENV HDFS_SIMULAT=${hdfs_simulat}
+
+# Instal·lam la darrera versió estable de Python3
+RUN mkdir -p ${hdfs_simulat} && \
     apt-get update -y && \
     apt-get install -y python3 && \
     ln -s /usr/bin/python3 /usr/bin/python && \
@@ -26,20 +30,20 @@ RUN apt-get update -y && \
     apt-get install -y python3-pip && \
     pip3 install gdown numpy matplotlib scipy scikit-learn
 
-# Realizamos la instalación de la versión especificada de Pyspark y JupyterLab
+# Instal·lam la versión especificada de Pyspark i JupyterLab
 RUN pip3 install wget pyspark==${spark_version} jupyterlab==${jupyterlab_version}
 
 
-## Ejecución de comandos al arrancar el contenedor
-# Montamos el HDFS simulado en una carpeta con datos persistentes
-VOLUME ${hdfs_simulado}
+## Executam les ordres en arrencar el contenidor
+# Montam el HDFS simulat en una carpeta amb dades persistents
+VOLUME ${hdfs_simulat}
 CMD ["bash"]
 
-# Exponemos el puerto utilizado por JupyterLab
+# Exposam el port utilitzat per JupyterLab
 EXPOSE ${jupyterlab_web}
 
-# Especificamos la ruta de trabajo dentro del contenedor
-WORKDIR ${HDFS_SIMULADO}
+# Especificam la ruta de treball dins del contenidor
+WORKDIR ${HDFS_SIMULAT}
 
-# Ejecutamos JupyterLab utilizando el puerto especificado
+# Executam JupyterLab en el port especificat
 CMD jupyter lab --ip=0.0.0.0 --port=${JUPYTERLAB_PORT} --no-browser --allow-root --NotebookApp.token=

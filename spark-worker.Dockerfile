@@ -1,20 +1,19 @@
-## Selección de imagen base
-# Especificamos como imagen base una imagen Debian ligera con Java 8 JRE
+## Seleccionam la imatge base
+# Especificam com a imatge base una imatge Debian llleuger amb Java 8 JRE
 FROM openjdk:8-jre-slim
 
 
-## Descarga e instalación de dependencias
-# Definimos las variables del Dockerfile
-ARG hdfs_simulado=/opt/workspace
-ARG spark_version=3.1.2
-ARG hadoop_version=3.2
-ARG spark_worker_web=8081 # Puerto para interfaz web del nodo worker
+## Descarregam e instal·lam les dependències
+# Definim les variables del Dockerfile
+ARG hdfs_simulat=/opt/workspace #directori compartit on simulam HDFS
+ARG spark_version=3.4.0
+ARG spark_worker_web=8081 # port per a la interfície web del node worker
 
-# Definimos la variable de entorno conteniendo el directorio de HDFS
-ENV HDFS_SIMULADO=${hdfs_simulado}
+# Definim les variables d'entorn amb el directori que simula HDFS
+ENV HDFS_SIMULAT=${hdfs_simulat}
 
-# Realizamos la instalación de la última versión estable de Python3
-RUN mkdir -p ${hdfs_simulado} && \
+# Instal·lam la darrera versió estable de Python3
+RUN mkdir -p ${hdfs_simulat} && \
     apt-get update -y && \
     apt-get install -y python3 && \
     ln -s /usr/bin/python3 /usr/bin/python && \
@@ -23,32 +22,32 @@ RUN apt-get update -y && \
     apt-get install -y python3-pip && \
     pip3 install gdown numpy matplotlib scipy scikit-learn
 
-# Realizamos la instalación de Apache Spark
+# Instal·lam Apache Spark
 RUN apt-get update -y && \
     apt-get install -y curl && \
-    curl https://archive.apache.org/dist/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop${hadoop_version}.tgz -o spark.tgz && \
+    curl https://archive.apache.org/dist/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop3.tgz -o spark.tgz && \
     tar -xf spark.tgz && \
-    mv spark-${spark_version}-bin-hadoop${hadoop_version} /usr/bin/ && \
-    mkdir /usr/bin/spark-${spark_version}-bin-hadoop${hadoop_version}/logs && \
+    mv spark-${spark_version}-bin-hadoop3 /usr/bin/ && \
+    mkdir /usr/bin/spark-${spark_version}-bin-hadoop3/logs && \
     rm spark.tgz
 
-# Definimos las variables de entorno de Spark
-ENV SPARK_HOME /usr/bin/spark-${spark_version}-bin-hadoop${hadoop_version}
+# Definim les variables d'entorn de Spark
+ENV SPARK_HOME /usr/bin/spark-${spark_version}-bin-hadoop3
 ENV SPARK_MASTER_HOST spark-master
 ENV SPARK_MASTER_PORT 7077
 ENV PYSPARK_PYTHON python3
 
-# Exponemos el puerto utilizado para acceder a la interfaz web del worker
+# Exposam el port per accedir a la interfície web del worker
 EXPOSE ${spark_worker_web}
 
 
-## Ejecución de comandos al arrancar el contenedor
-# Montamos el HDFS simulado en una carpeta con datos persistentes
-VOLUME ${hdfs_simulado}
+## Executam les ordres en arrencar el contenidor
+# Montam el HDFS simulat en una carpeta amb dades persistents
+VOLUME ${hdfs_simulat}
 CMD ["bash"]
 
-# Especificamos la ruta de trabajo dentro del contenedor
+# Especificam la ruta de treball dins del contenidor
 WORKDIR ${SPARK_HOME}
 
-# Ejecutamos Apache Spark como nodo worker
+# Executam Apache Spark com a node worker
 CMD bin/spark-class org.apache.spark.deploy.worker.Worker spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT} >> logs/spark-worker.out
